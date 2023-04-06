@@ -10,6 +10,10 @@ const gallery = document.querySelector('.gallery__item');
 
 const pixabayApi = new PixabayAPI();
 
+options = {
+  rootMargin: '100px',
+};
+
 const onSearchFormSubmit = async event => {
   event.preventDefault();
   clearPage();
@@ -52,10 +56,6 @@ async function renderPage() {
   smoothScroll();
 }
 
-options = {
-  rootMargin: '100px',
-};
-
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (
@@ -71,8 +71,6 @@ const observer = new IntersectionObserver(entries => {
     }
   });
 }, options);
-
-
 
 observer.observe(document.querySelector('#dementor'));
 
