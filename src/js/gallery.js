@@ -29,7 +29,6 @@ const onSearchFormSubmit = async event => {
 
   try {
     renderPage();
-    searchQuery = null;
   } catch (err) {
     console.log(err);
   }
