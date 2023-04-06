@@ -53,8 +53,9 @@ async function renderPage() {
 }
 
 options = {
-  rootMargin: '100px',
+  rootMargin: "100px",
 };
+
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (
