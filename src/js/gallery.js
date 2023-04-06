@@ -52,8 +52,8 @@ async function renderPage() {
   smoothScroll();
 }
 
-const options = {
-  rootMargin: "100px",
+options = {
+  rootMargin: '100px',
 };
 
 const observer = new IntersectionObserver(entries => {
