@@ -29,6 +29,7 @@ const onSearchFormSubmit = async event => {
 
   try {
     renderPage();
+    searchQuery = null;
   } catch (err) {
     console.log(err);
   }
@@ -41,13 +42,14 @@ async function renderPage() {
     {
     }
     searchFormEl.reset();
+    clearPage();
     Notiflix.Report.failure(
       'Failure',
       `We do not have anything for your search`,
       'Ok'
     );
   }
-  if (pixabayApi.page === 1) {
+  if (pixabayApi.page === 1 && data.hits.length > 0) {
     Notiflix.Notify.success(`Yep Yep :-) We found ${data.totalHits} images.`);
   }
   galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(data.hits));
@@ -55,7 +57,7 @@ async function renderPage() {
   smoothScroll();
 }
 
-const onEntry = entries => {
+let onEntry = entries => {
   entries.forEach(entry => {
     if (
       (entry.isIntersecting =
@@ -74,7 +76,7 @@ const onEntry = entries => {
   });
 };
 
-const observer = new IntersectionObserver(onEntry, {
+let observer = new IntersectionObserver(onEntry, {
   rootMargin: '50px',
 });
 
