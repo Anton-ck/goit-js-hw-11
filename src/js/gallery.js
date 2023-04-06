@@ -52,9 +52,7 @@ async function renderPage() {
   smoothScroll();
 }
 
-// options = {
-//   rootMargin: '100px',
-// };
+
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -70,7 +68,11 @@ const observer = new IntersectionObserver(entries => {
       }
     }
   });
-}, );
+}, options);
+
+options = {
+  rootMargin: '100px',
+};
 
 observer.observe(document.querySelector('#dementor'));
 
