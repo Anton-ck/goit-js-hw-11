@@ -52,7 +52,7 @@ async function renderPage() {
   smoothScroll();
 }
 
-options = {
+const options = {
   rootMargin: "100px",
 };
 
