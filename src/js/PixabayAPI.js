@@ -5,7 +5,7 @@ export class PixabayAPI {
   #API_KEY = '34828268-d3c9207948fe19a18b525d048';
   page = 1;
   query = null;
-  per_page = 10;
+  per_page = 40;
 
   getPhotosByQuery() {
     return axios.get(`${this.#BASE_URL}`, {

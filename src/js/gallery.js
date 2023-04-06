@@ -10,10 +10,6 @@ const gallery = document.querySelector('.gallery__item');
 
 const pixabayApi = new PixabayAPI();
 
-options = {
-  rootMargin: '100px',
-};
-
 const onSearchFormSubmit = async event => {
   event.preventDefault();
   clearPage();
@@ -24,7 +20,9 @@ const onSearchFormSubmit = async event => {
   pixabayApi.query = searchQuery;
 
   if (!searchQuery) {
-    return oooops();
+    oooops();
+    searchFormEl.reset();
+    return;
   }
   pixabayApi.page = 1;
   clearPage();
@@ -38,7 +36,7 @@ const onSearchFormSubmit = async event => {
 
 async function renderPage() {
   const { data } = await pixabayApi.getPhotosByQuery();
-
+  console.table(pixabayApi.page);
   if (data.hits.length === 0) {
     {
     }
@@ -48,7 +46,8 @@ async function renderPage() {
       `We do not have anything for your search`,
       'Ok'
     );
-  } else if (pixabayApi.page === 1 || pixabayApi.page !== 2) {
+  }
+  if (pixabayApi.page === 1) {
     Notiflix.Notify.success(`Yep Yep :-) We found ${data.totalHits} images.`);
   }
   galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(data.hits));
@@ -56,31 +55,40 @@ async function renderPage() {
   smoothScroll();
 }
 
-const observer = new IntersectionObserver(entries => {
+const onEntry = entries => {
   entries.forEach(entry => {
     if (
       (entry.isIntersecting =
         true && searchFormEl['user-search-query'].value !== '')
     ) {
       try {
+        if (entries[0].intersectionRatio <= 0) return;
+
         pixabayApi.page += 1;
+
         renderPage();
       } catch (err) {
         console.log(err);
       }
     }
   });
-}, options);
+};
+
+const observer = new IntersectionObserver(onEntry, {
+  rootMargin: '50px',
+});
 
 observer.observe(document.querySelector('#dementor'));
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 
+////////////////////////////////////////////////////////////////////////////
 async function oooops() {
   const image = await document.createElement('img');
   image.src =
     'https://images.lookhuman.com/render/standard/0905030583597000/greetingcard45-off_white-z1-t-oops-you-tried-cat.jpg';
   galleryEl.prepend(image);
+  return;
 }
 
 function smoothScroll() {
