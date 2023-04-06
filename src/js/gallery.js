@@ -60,8 +60,7 @@ async function renderPage() {
 let onEntry = entries => {
   entries.forEach(entry => {
     if (
-      (entry.isIntersecting =
-        true && searchFormEl['user-search-query'].value !== '')
+      (entry.isIntersecting && searchFormEl['user-search-query'].value !== '')
     ) {
       try {
         if (entries[0].intersectionRatio <= 0) return;
