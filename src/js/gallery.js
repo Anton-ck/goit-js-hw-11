@@ -85,6 +85,8 @@ searchFormEl.addEventListener('submit', onSearchFormSubmit);
 ////////////////////////////////////////////////////////////////////////////
 async function oooops() {
   const image = await document.createElement('img');
+  image.height = 400;
+  image.width = 400
   image.src =
     'https://images.lookhuman.com/render/standard/0905030583597000/greetingcard45-off_white-z1-t-oops-you-tried-cat.jpg';
   galleryEl.prepend(image);
