@@ -52,7 +52,7 @@ async function renderPage() {
     Notiflix.Notify.success(`Yep Yep :-) We found ${data.totalHits} images.`);
   }
   galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(data.hits));
-  lightboxGallery();
+  lightbox.refresh();
   smoothScroll();
 }
 
@@ -106,11 +106,8 @@ function clearPage() {
   galleryEl.innerHTML = '';
 }
 
-const lightboxGallery = () => {
-  const lightbox = new SimpleLightbox('.gallery a', {
+const lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionPosition: 'bottom',
-    captionDelay: 250,
+    captionDelay: 150,
   });
-  lightbox.refresh();
-};
