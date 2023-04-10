@@ -7,6 +7,7 @@ import createGalleryCards from '../templates/gallery-card.hbs';
 const galleryEl = document.querySelector('.js-gallery');
 const searchFormEl = document.querySelector('.js-search-form');
 const gallery = document.querySelector('.gallery__item');
+const dementor = document.querySelector('#dementor');
 
 const pixabayApi = new PixabayAPI();
 
@@ -17,14 +18,16 @@ const onSearchFormSubmit = async event => {
     .toLowerCase()
     .trim();
 
+  pixabayApi.page = 1;
   pixabayApi.query = searchQuery;
+  observer.unobserve(dementor);
 
   if (!searchQuery) {
     oooops();
     searchFormEl.reset();
+    // observer.unobserve(dementor);
     return;
   }
-  pixabayApi.page = 1;
   clearPage();
 
   try {
@@ -36,12 +39,12 @@ const onSearchFormSubmit = async event => {
 
 async function renderPage() {
   const { data } = await pixabayApi.getPhotosByQuery();
-  console.table(pixabayApi.page);
+
+  // console.table(pixabayApi.page);
   if (data.hits.length === 0) {
-    {
-    }
     searchFormEl.reset();
     clearPage();
+
     Notiflix.Report.failure(
       'Failure',
       `We do not have anything for your search`,
@@ -51,7 +54,11 @@ async function renderPage() {
   if (pixabayApi.page === 1 && data.hits.length > 0) {
     Notiflix.Notify.success(`Yep Yep :-) We found ${data.totalHits} images.`);
   }
+
   galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(data.hits));
+  if (pixabayApi.page < Math.ceil(data.totalHits / pixabayApi.per_page)) {
+    observer.observe(dementor);
+  }
   lightbox.refresh();
   smoothScroll();
 }
@@ -59,14 +66,15 @@ async function renderPage() {
 let onEntry = entries => {
   entries.forEach(entry => {
     if (
-      (entry.isIntersecting && searchFormEl['user-search-query'].value !== '')
+      entry.isIntersecting &&
+      searchFormEl['user-search-query'].value !== ''
     ) {
+      pixabayApi.page += 1;
+
       try {
         if (entries[0].intersectionRatio <= 0) return;
-
-        pixabayApi.page += 1;
-
         renderPage();
+        lightbox.refresh();
       } catch (err) {
         console.log(err);
       }
@@ -78,7 +86,7 @@ let observer = new IntersectionObserver(onEntry, {
   rootMargin: '50px',
 });
 
-observer.observe(document.querySelector('#dementor'));
+// observer.observe(dementor);
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 
@@ -86,7 +94,7 @@ searchFormEl.addEventListener('submit', onSearchFormSubmit);
 async function oooops() {
   const image = await document.createElement('img');
   image.height = 400;
-  image.width = 400
+  image.width = 400;
   image.src =
     'https://images.lookhuman.com/render/standard/0905030583597000/greetingcard45-off_white-z1-t-oops-you-tried-cat.jpg';
   galleryEl.prepend(image);
@@ -109,7 +117,7 @@ function clearPage() {
 }
 
 const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionPosition: 'bottom',
-    captionDelay: 150,
-  });
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 150,
+});
